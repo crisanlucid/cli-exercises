@@ -1,34 +1,14 @@
-const fs = require("fs");
-const csv = require("fast-csv");
-const path = require("path");
+const processCSV = require("./lib/processCSV");
 
-const fileName = process.argv[2] || "Default";
+//validation argument, file CSV
+const fileName = process.argv[2];
 
-if (!fileName) return console.log("no argument");
+if (!fileName || !fileName.includes(".csv"))
+  return console.error("missing CSV file");
 
-// (async function(){
-//    const readStream
+//main Script
+const main = async () => {
+  processCSV(__dirname, fileName);
+};
 
-// })()
-
-fs.createReadStream(path.resolve(__dirname, "input.csv"))
-  .pipe(csv.parse({ headers: true }))
-  // pipe the parsed input into a csv formatter
-  .pipe(
-    csv.format({
-      headers: true,
-      quoteColumns: { json: true },
-      quoteHeaders: false,
-    })
-  )
-  .on("error", (error) => console.error(error))
-  .transform((data) => {
-    const ret = {};
-    ["id", "json", "is_valid"].forEach((prop) => {
-      ret[prop] = data[prop] || true;
-    });
-
-    return ret;
-  })
-  .pipe(process.stdout)
-  .on("end", () => process.exit());
+main();
