@@ -46,4 +46,22 @@ describe("Node CLI script", () => {
       'The column "json" should have array value'
     );
   });
+
+  it("should return a rotate the matrix is the file exist", () => {
+    const myCLI = chaiExec("node cli.js input.csv");
+
+    expect(myCLI).stdout.not.be.empty;
+    expect(myCLI).stdout.be.a("string");
+    expect(myCLI).stderr.to.be.empty;
+
+    expect(myCLI).to.have.stdout(
+      `id,json,is_valid\n` +
+        `1,"[4,1,2,7,5,3,8,9,6]",true\n` +
+        `2,"[90,40,10,20]",true\n` +
+        `3,"[-5]",true\n` +
+        `9,"[]",false\n` +
+        `5,"[]",false\n` +
+        `8,"[]",false`
+    );
+  });
 });
